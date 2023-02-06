@@ -1,16 +1,3 @@
-# lunch_buddy
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Lunch Buddy is a social networking app to allow for strangers to post requests to meetup for lunch/dinner at restaurants. 
+This app is more focused on casual interactions rather than romance such as dating apps like Tinder or Bumble. 
+For example, users cannot post a request to meet more than a month in advance.
