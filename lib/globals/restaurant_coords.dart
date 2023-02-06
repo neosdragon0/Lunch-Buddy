@@ -1,4 +1,7 @@
-/// Global variables for later use in Google Maps
+import 'dart:typed_data';
+import 'dart:ui';
+
+import '../nearby/nearbyplaces.dart';
 
 double globalLong = 0.0;
 double globalLat = 0.0;

@@ -23,8 +23,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String bio = "";
   final TextEditingController bioController = TextEditingController();
 
-  /// Opens the phone's image gallery to let users pick an image for their
-  /// profile picture
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -39,7 +37,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
-  // Returns the image url from a user
   String getImage() {
     final currUserID = FirebaseAuth.instance.currentUser?.uid;
     String imageURL = "";
@@ -55,7 +52,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return imageURL;
   }
 
-  // Returns a user's bio
   String getBio() {
     final currUserID = FirebaseAuth.instance.currentUser?.uid;
     String bio = "";
@@ -71,7 +67,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return bio;
   }
 
-  // Updates a user's bio
   Future<void> updateBio(String bio) {
     final currUserID = FirebaseAuth.instance.currentUser?.uid;
     setState(() => this.bio = bio);
@@ -93,7 +88,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-  // Fetches the current user's posted requests
   Future<List<PublicRequest>> fetchRequests() async {
     await Future.delayed(const Duration(seconds: 1));
 
@@ -113,10 +107,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
         .get()
         .then((DocumentSnapshot doc) async {
       userInfo = doc.data() as Map<String, dynamic>;
-      for (String postedRequestID in userInfo['posted_requests']) {
+      for (String takenRequestID in userInfo['posted_requests']) {
         await FirebaseFirestore.instance
             .collection("public_requests")
-            .doc(postedRequestID)
+            .doc(takenRequestID)
             .get()
             .then((DocumentSnapshot docSnap) async {
           requestInfo = docSnap.data() as Map<String, dynamic>;
@@ -142,9 +136,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
           });
 
           myRequestList.add(PublicRequest(
-              id: docSnap.id,
+              id: doc.id,
               restName: requestInfo['restaurant_name'],
-              restImage: requestInfo['restaurant_image'],
+              restImage: "images/PandaExpress.png",
               restAddress: requestInfo['restaurant_street_address'],
               city: requestInfo['restaurant_city'],
               state: requestInfo['restaurant_state'],
@@ -160,7 +154,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return myRequestList;
   }
 
-  // Fetches the information about a current user
   Future<Person?> fetchUser() async {
     await Future.delayed(const Duration(seconds: 1));
 
@@ -190,14 +183,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
     super.initState();
-
-    // Fetches data from the database
     myRequests = fetchRequests();
     currUser = fetchUser();
   }
 
   @override
   Widget build(BuildContext context) {
+    //image = File(getImage());
     bio = getBio();
     return GestureDetector(
       onTap: () {
@@ -463,24 +455,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 }
 
-class MyRequestItem extends StatefulWidget {
+class MyRequestItem extends StatelessWidget {
+  final PublicRequest myRequestItem;
 
-  var myRequestItem;
-
-  MyRequestItem({
+  const MyRequestItem({
     Key? key,
     required this.myRequestItem,
   }) : super(key: key);
-
-  @override
-  State<MyRequestItem> createState() =>
-      _MyRequestItemState(myRequestItem);
-}
-
-class _MyRequestItemState extends State<MyRequestItem> {
-  final PublicRequest myRequestItem;
-
-  _MyRequestItemState(this.myRequestItem);
 
   @override
   Widget build(BuildContext context) {
@@ -498,7 +479,7 @@ class _MyRequestItemState extends State<MyRequestItem> {
               left: 280,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
+                child: Image.asset(
                   myRequestItem.restImage,
                   height: 64,
                   width: 64,
@@ -600,76 +581,7 @@ class _MyRequestItemState extends State<MyRequestItem> {
                   backgroundColor: MyApp.mGreen,
                 ),
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(
-                          'Do you really want to delete your posted request?'),
-                      content: const Text(
-                          'You will have to make another request and this request will disappear'
-                              'for other users.'),
-                      actions: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: MyApp.mRed,
-                          ),
-                          onPressed: () async {
-                            final currUserID = FirebaseAuth
-                                .instance.currentUser?.uid;
-                            final db =
-                                FirebaseFirestore.instance;
-
-                            // Deletes the id of the request from the 'posted_request'
-                            // field in the current user's document in the database
-                            await db
-                                .collection("users")
-                                .doc(currUserID)
-                                .update({
-                              'posted_requests':
-                              FieldValue.arrayRemove(
-                                  [myRequestItem.id])
-                            });
-
-                            // Deletes the id of the request from the 'taken_request'
-                            // field for every user that accepted this request
-                            await db
-                                .collection("public_requests")
-                                .doc(myRequestItem.id)
-                                .get()
-                                .then((DocumentSnapshot doc) async {
-                                  for (String userID in doc.get("accepted_users_id")) {
-                                    await db
-                                        .collection("users")
-                                        .doc(userID)
-                                        .update(
-                                          {'taken_requests': FieldValue.arrayRemove([myRequestItem.id])}
-                                        );
-                                  }
-                            });
-
-                            await db
-                                .collection("public_requests")
-                                .doc(myRequestItem.id)
-                                .delete();
-
-                            setState(() {
-                              Navigator.pop(context);
-                            });
-                          },
-                          child: const Text('Delete'),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: MyApp.mGreen,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                      ],
-                    ),
-                  );
+                  debugPrint("YO");
                 },
                 child: const Text('Delete Request'),
               ),

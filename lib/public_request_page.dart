@@ -117,7 +117,7 @@ class _PublicRequestPageState extends State<PublicRequestPage> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           hintText: "Restaurant Name",
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               vertical: 3.0, horizontal: 10.0),
                           border: InputBorder.none,
                           filled: true,
@@ -138,7 +138,7 @@ class _PublicRequestPageState extends State<PublicRequestPage> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           hintText: "Location",
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               vertical: 3.0, horizontal: 10.0),
                           border: InputBorder.none,
                           filled: true,
@@ -356,7 +356,7 @@ class PublicRequestItem extends StatefulWidget {
 
   @override
   _PublicRequestItemState createState() =>
-      _PublicRequestItemState(publicRequestItem);
+      new _PublicRequestItemState(publicRequestItem);
 }
 
 class _PublicRequestItemState extends State<PublicRequestItem> {

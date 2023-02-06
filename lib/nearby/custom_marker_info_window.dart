@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,9 +21,9 @@ class CustomMarketInfoWindow extends StatefulWidget {
 
 class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
 
-  final CustomInfoWindowController _customInfoWindowController =
+  CustomInfoWindowController _customInfoWindowController =
   CustomInfoWindowController();
-  final Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer();
   final List<Marker> _marker = [];  //markers with restaurants
 
   NearbyPlacesResponse nearbyPlacesResponse = NearbyPlacesResponse();
@@ -32,8 +33,12 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    // loadData();
     navigateToCurrentPosition();
+    // getNearbyPlaces();
+    // loadData();
   }
 
   loadData() {
@@ -60,6 +65,11 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
         var resultsImg = json.decode(resultImg);
         var imageResult = resultsImg['images_results'][0];
         photoUrl = imageResult['thumbnail'];
+
+        print("---------");
+        print(photoUrl);
+        // Wait for the downloadImage() function to complete and get the image data
+        Uint8List imageData = await downloadImage(photoUrl);
 
         final split = formattedAddress.split(',');
         final split2 = formattedAddress.split(' ');
@@ -106,10 +116,10 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
       debugPrint(value.latitude.toString() + value.longitude.toString());
 
       _marker.add(Marker(
-          markerId: const MarkerId("yeiuwe87"),
+          markerId: MarkerId("yeiuwe87"),
           position: LatLng(value.latitude, value.longitude),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-          infoWindow: const InfoWindow(
+          infoWindow: InfoWindow(
             title: 'My current location',
           )));
 
@@ -143,7 +153,7 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
             // icon: Icon(Icons.book)
               itemBuilder: (context) {
                 return [
-                  const PopupMenuItem<int>(
+                  PopupMenuItem<int>(
                     value: 0,
                     child: Text("Restaurant"),
                   ),
@@ -180,13 +190,33 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
   void getNearbyPlaces(String type) async {
     _marker.clear();
     var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$currentLat,$currentLng&radius=1500&type=$type&key=AIzaSyBwRIxToOIBRwjj1NgMFweD-iDn9Dcgzqk');
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' +
+            currentLat.toString() +
+            ',' +
+            currentLng.toString() +
+            '&radius=1500&type=' +
+            type +
+            '&key=AIzaSyBwRIxToOIBRwjj1NgMFweD-iDn9Dcgzqk');
 
     var response = await http.post(url);
 
+    print("printing latlng");
+    print(jsonDecode(response.body));
     nearbyPlacesResponse =
         NearbyPlacesResponse.fromJson(jsonDecode(response.body));
+    print("printing latlng");
+    print(jsonDecode(response.body));
     loadData();
     setState(() {});
+  }
+
+  void getImage(String restaurantNames) async {
+    var url = Uri.parse(
+      "https://serpapi.com/search.json?q=$restaurantNames&tbm=isch&ijn=0"
+    );
+    var response = await http.get(url);
+    print("print image url");
+    
+
   }
 }

@@ -75,7 +75,7 @@ class _MessagingPageState extends State<MessagingPage> {
           takenRequestList.add(PublicRequest(
               id: docSnap.id,
               restName: requestInfo['restaurant_name'],
-              restImage: requestInfo['restaurant_image'],
+              restImage: "images/PandaExpress.png",
               restAddress: requestInfo['restaurant_street_address'],
               city: requestInfo['restaurant_city'],
               state: requestInfo['restaurant_state'],
@@ -393,7 +393,7 @@ class _TakenRequestItemState extends State<TakenRequestItem> {
               left: 280,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
+                child: Image.asset(
                   takenRequestItem.restImage,
                   height: 64,
                   width: 64,

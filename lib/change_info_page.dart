@@ -13,6 +13,11 @@ class ChangeInfoPage extends StatefulWidget {
   State<ChangeInfoPage> createState() => _ChangeInfoPageState();
 }
 
+class DummyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => ChangeInfoPage();
+}
+
 class _ChangeInfoPageState extends State<ChangeInfoPage> {
   late String gender;
 
@@ -37,6 +42,17 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
     gender = genderList[0];
   }
 
+  // This is the trick!
+  void _reset() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration.zero,
+        pageBuilder: (_, __, ___) => DummyWidget(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -55,7 +71,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -87,13 +103,13 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Text("New User Info",
                         style: GoogleFonts.indieFlower(
                             fontSize: 50, color: MyApp.dGreen)),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text("Username",
@@ -123,7 +139,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text("First Name",
@@ -153,7 +169,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text("Last Name",
@@ -183,7 +199,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text("Age",
@@ -222,7 +238,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text("Gender",
@@ -259,7 +275,7 @@ class _ChangeInfoPageState extends State<ChangeInfoPage> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(4),

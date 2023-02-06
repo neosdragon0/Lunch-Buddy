@@ -17,6 +17,11 @@ class NewPublicRequestPage extends StatefulWidget {
 }
 
 class _NewPublicRequestPageState extends State<NewPublicRequestPage> {
+  final _restNameController = TextEditingController();
+  final _restAddressController = TextEditingController();
+  final _restCityController = TextEditingController();
+  final _restStateController = TextEditingController();
+
   DateTime meetingDateTime = DateTime.now();
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -76,7 +81,7 @@ class _NewPublicRequestPageState extends State<NewPublicRequestPage> {
                 children: [
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 32,
                       ),
                       Positioned(
@@ -172,7 +177,7 @@ class _NewPublicRequestPageState extends State<NewPublicRequestPage> {
                   ),
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 32,
                       ),
                       Positioned(
